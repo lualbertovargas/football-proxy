@@ -1,19 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 import os
 
 app = Flask(__name__)
-API_KEY = "d159c3c992dcfc3e31d5bee931ea0202"
+CORS(app)
 
-@app.route("/events")
-def events():
-    fixture = request.args.get("fixture", "215662")
-    resp = requests.get(
-        "https://v3.football.api-sports.io/fixtures/events",
-        headers={"x-apisports-key": API_KEY},
-        params={"fixture": fixture}
-    )
-    return jsonify(resp.json())
+API_KEY = "d159c3c992dcfc3e31d5bee931ea0202"
 
 @app.route("/live")
 def live():
@@ -21,6 +14,16 @@ def live():
         "https://v3.football.api-sports.io/fixtures",
         headers={"x-apisports-key": API_KEY},
         params={"live": "all"}
+    )
+    return jsonify(resp.json())
+
+@app.route("/events")
+def events():
+    fixture = request.args.get("fixture", "")
+    resp = requests.get(
+        "https://v3.football.api-sports.io/fixtures/events",
+        headers={"x-apisports-key": API_KEY},
+        params={"fixture": fixture}
     )
     return jsonify(resp.json())
 
